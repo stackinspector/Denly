@@ -3,20 +3,20 @@
  * @param {Array<number>} arr
  * @returns {Array<number>} result
  */
-export function sort(arr: Array<number>): Array<number> {
+export function sort(arr: number[]): number[] {
     // length < 1 don't need sort
     if (arr.length < 1) return arr;
 
     // find middle index
-    let mid = Math.floor(arr.length / 2);
+    const mid = Math.floor(arr.length / 2);
 
     // get middle value
-    let temp = arr.splice(mid, 1)[0];
+    const temp = arr.splice(mid, 1)[0];
 
-    let left = [];
-    let right = [];
+    const left = [];
+    const right = [];
 
-    for (var i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
         if (arr[i] < temp) {
             left.push(arr[i]);
         } else if (arr[i] >= temp) {

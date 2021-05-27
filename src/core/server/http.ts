@@ -39,9 +39,9 @@ export class DenlyHttp {
             port: port,
         });
 
-        if (options !== undefined) {
+        if (options !== void 0) {
             // 存在特殊配置
-            if (options.debug !== undefined) {
+            if (options.debug !== void 0) {
                 this.debug = options.debug;
             } else {
                 this.debug = false;
@@ -55,9 +55,9 @@ export class DenlyHttp {
 const header = new Headers();
 
 interface ReqInfos {
-    _args: { [name: string]: string; };
-    _form: { [name: string]: string; };
-    _file: { [name: string]: File };
+    _args: Record<string, string>;
+    _form: Record<string, string>;
+    _file: Record<string, File>;
     redirect: string;
     error: number;
 }
@@ -107,11 +107,11 @@ export class DRequest {
 
 }
 
-export let Request = new DRequest();
+export const Request = new DRequest();
 
 export class DResponse {
 
-    private contentType: { [key: string]: string } = {
+    private contentType: Record<string, string> = {
         ico: "image/jpg; charset=utf-8",
         jpg: "image/jpg; charset=utf-8",
         png: "image/jpg; charset=utf-8",
@@ -151,7 +151,7 @@ export class DResponse {
     /**
        * 返回 Json 代码
        */
-    public json(data: object) {
+    public json(data: Record<string, unknown>) {
         header.set("Content-Type", "application/json; charset=utf-8");
         return JSON.stringify(data);
     }
@@ -160,7 +160,7 @@ export class DResponse {
        * 返回 文件内容
        */
     public file(file: string, contentType?: string) {
-        if (typeof file == "string") {
+        if (typeof file === "string") {
             if (fileExist(file)) {
 
                 const suffix = file.split(".")[file.split(".").length - 1];
@@ -190,9 +190,9 @@ export const Response = new DResponse();
 
 export function httpInit(
     data: {
-        args: { [name: string]: string; };
-        form: { [name: string]: string; };
-        file: { [name: string]: File; };
+        args: Record<string, string>;
+        form: Record<string, string>;
+        file: Record<string, File>;
     },
 ) {
     reqinfo._args = data.args;

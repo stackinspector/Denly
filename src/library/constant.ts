@@ -22,7 +22,7 @@ export const _version = "V0.23";
  * @description Get Platform Separator
  */
 export const _separator: string = (() => {
-    if (Deno.build.os == "windows") {
+    if (Deno.build.os === "windows") {
         return "\\";
     } else {
         return "/";
@@ -34,17 +34,15 @@ export const _separator: string = (() => {
  */
 export const _tempdir: string = (() => {
     try {
-        let temp: string = Deno.makeTempDirSync();
-        let index = temp.lastIndexOf(_separator);
+        const temp: string = Deno.makeTempDirSync();
+        const index = temp.lastIndexOf(_separator);
 
-        let folder: string = temp.substring(0, index);
+        const folder: string = temp.substring(0, index);
 
         Deno.removeSync(temp, { recursive: true });
 
         return folder;
-    } catch (error) {
+    } catch (_) {
         return _dirname + "/temp/";
     }
-
-    return "";
 })();

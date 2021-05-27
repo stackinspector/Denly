@@ -51,7 +51,6 @@ class ESession implements SessionSystem {
             const decoder = new TextDecoder();
             return decoder.decode(data);
         }
-        return undefined;
     }
 
     /**
@@ -82,8 +81,8 @@ class ESession implements SessionSystem {
     }
 }
 
-let storage: Array<ICookie> = [];
-let loader: Map<string, string> = new Map();
+const storage: ICookie[] = [];
+const loader: Map<string, string> = new Map();
 
 class ECookie {
     public set(key: string, value: string, options?: {
@@ -96,7 +95,7 @@ class ECookie {
         sameSite?: "Strict" | "Lax" | "None";
         unparsed?: string[];
     }) {
-        let data = { name: key, value: value, ...options };
+        const data = { name: key, value: value, ...options };
 
         storage.push(data);
     }

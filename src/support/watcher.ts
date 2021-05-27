@@ -1,6 +1,6 @@
 import { _dirname, Denly, EConsole } from "../mod.ts";
 
-type callback = (status: string) => any;
+type callback = (status: string) => unknown;
 
 /**
  * Watcher [obj]
@@ -13,7 +13,7 @@ export class Watcher {
        */
     public static info: {
         path: string;
-        suffix: Array<string>;
+        suffix: string[];
     } = { path: _dirname + "/", suffix: ["ts"] };
 
     /**
@@ -42,7 +42,7 @@ export class Watcher {
        */
     public static defaultCallback(status: string) {
         if (this.app.deop.options?.debug) {
-            if (Deno.args.length > 0 && Deno.args[0] == "-CHILD") {
+            if (Deno.args.length > 0 && Deno.args[0] === "-CHILD") {
                 EConsole.debug("The file has changed, server has been restarted!");
                 Deno.exit(0);
             }

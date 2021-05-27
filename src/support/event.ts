@@ -1,4 +1,4 @@
-type Callback = (event: DeventResult) => any;
+type Callback = (event: DeventResult) => unknown;
 
 interface DeOptions {
     single?: boolean;
@@ -10,18 +10,14 @@ interface DeventResult {
 }
 
 export interface EventList {
-    normal: {
-        [key: string]: {
-            frequency: number
-            single: boolean
-        }
-    },
-    timing: {
-        [key: string]: {
-            frequency: number,
-            timing: number
-        }
-    }
+    normal: Record<string, {
+        frequency: number
+        single: boolean
+    }>,
+    timing: Record<string, {
+        frequency: number,
+        timing: number
+    }>
 }
 
 export class DEvent {
@@ -54,7 +50,7 @@ export class DEvent {
         callback: Callback,
         options?: DeOptions,
     ): DEvent {
-        if (options == null) {
+        if (options === null) {
             options = {
                 single: false,
             };
@@ -78,13 +74,13 @@ export class DEvent {
      * @param name 
      * @returns returned value
      */
-    public triggerEvent(name: string): any {
+    public triggerEvent(name: string): unknown {
 
-        let eve = this.events.get(name);
+        const eve = this.events.get(name);
 
         if (eve) {
             // call the event callback
-            let result = eve.callback({
+            const result = eve.callback({
                 name: name,
             });
 
@@ -123,7 +119,7 @@ export class DEvent {
      * @Internal
      */
     public timingTaskListner(): DEvent {
-        let stepStat: Map<string, number> = new Map();
+        const stepStat: Map<string, number> = new Map();
 
         setInterval(() => {
             this.timingTask.forEach((value, key) => {
@@ -132,7 +128,7 @@ export class DEvent {
 
                 // console.log(stepStat.get(key));
 
-                let step = stepStat.get(key);
+                const step = stepStat.get(key);
                 if (step) {
                     if (value <= (step * 1000)) {
                         stepStat.set(key, 0);
@@ -156,7 +152,7 @@ export class DEvent {
      */
     public eventList() {
 
-        let result: EventList = {
+        const result: EventList = {
             normal: { /** normal event */ },
             timing: { /** timing event */ },
         };
@@ -170,7 +166,7 @@ export class DEvent {
             } else {
                 result.normal[key] = {
                     frequency: value.frequency,
-                    single: (value.options.single != null)
+                    single: (value.options.single !== null)
                 }
             }
         });
@@ -179,4 +175,4 @@ export class DEvent {
     }
 }
 
-export let Event = new DEvent().timingTaskListner();
+export const Event = new DEvent().timingTaskListner();

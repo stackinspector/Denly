@@ -152,18 +152,18 @@ export class Denly {
     public async proxy(request: ServerRequest): Promise<HttpState> {
         let status = 200;
 
-        const sections: Array<string> = pathParser(request.url); // 路径解析
+        const sections: string[] = pathParser(request.url); // 路径解析
 
-        let args: { [name: string]: string; } = {};
-        let form: { [name: string]: string } = {};
-        let file: { [name: string]: File } = {};
+        let args: Record<string, string> = {};
+        let form: Record<string, string> = {};
+        let file: Record<string, File> = {};
 
         let context: Uint8Array | Deno.Reader | string = "";
 
         loadCookie(request); // 读取存在的 Cookie
 
         // 除去 GET 请求才支持 FormData, Urlencoded, Raw, File 等提交
-        if (request.method == "GET") {
+        if (request.method === "GET") {
             args = getDecoder(request.url);
         } else {
             const origin: Uint8Array = await readAll(request.body);
@@ -180,10 +180,10 @@ export class Denly {
         const target = RouteController.processer(sections, request.method);
 
         if (target) {
-            if (typeof target.route == "function") {
+            if (typeof target.route === "function") {
 
                 // Default Header [Content-Type]
-                if (target.other?.method == "ANY" || target.other?.method == "GET") {
+                if (target.other?.method === "ANY" || target.other?.method === "GET") {
                     this.response.header("Content-Type", "text/html;charset=utf-8");
                 } else {
                     this.response.header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -194,7 +194,7 @@ export class Denly {
                     context = await target.route(...target.parms);
 
                 } catch (error) {
-                    if (typeof error == "number") {
+                    if (typeof error === "number") {
                         status = error;
                     } else {
                         status = 500;
@@ -206,7 +206,7 @@ export class Denly {
         const resp = httpResp();
 
         // Redirect 处理器（重定向）
-        if (resp.redirect != "#" && resp.redirect != "") {
+        if (resp.redirect !== "#" && resp.redirect !== "") {
             const header: Headers = new Headers();
             header.set("Location", resp.redirect);
             request.respond({ status: 301, body: "", headers: header });
@@ -219,8 +219,8 @@ export class Denly {
         };
 
         // Error
-        if (resp.error != 200 || status != 200) {
-            if (status == 200) status = resp.error;
+        if (resp.error !== 200 || status !== 200) {
+            if (status === 200) status = resp.error;
             result = RouteController.httpError(status);
         }
 
@@ -290,7 +290,7 @@ export class Denly {
        */
     private static reqinfo(r: ServerRequest, code: number): void {
         let status = "";
-        if (code == 200) {
+        if (code === 200) {
             status = colorTab.Green + code + colorTab.Clean;
         } else {
             status = colorTab.Red + code + colorTab.Clean;
@@ -310,7 +310,7 @@ export function pathParser(url: string) {
         url = url.split("?")[0];
     }
 
-    let sections = url.split("/").filter((s) => s != "");
+    let sections = url.split("/").filter((s) => s !== "");
 
     if (sections.length < 1) {
         sections = ["_PATH_ROOT_"];

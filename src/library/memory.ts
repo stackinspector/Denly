@@ -89,7 +89,7 @@ export class EMemory {
     public set(key: string, value: string | Uint8Array, expire?: number) {
         let memTemp = this.memorys.get(this.thisGroup);
 
-        if (typeof value == "string") {
+        if (typeof value === "string") {
             value = encoder.encode(value);
         }
 
@@ -125,9 +125,9 @@ export class EMemory {
     public get(key: string) {
         const memTemp = this.memorys.get(this.thisGroup);
 
-        if (!memTemp) return undefined;
+        if (!memTemp) return;
 
-        if (this.overdue(key)) return undefined;
+        if (this.overdue(key)) return;
 
         return memTemp.memorys.get(key)?.value;
     }
@@ -169,7 +169,7 @@ export class EMemory {
 
         if (!data.expire) data.expire = 0;
 
-        if (data.expire > new Date().getTime() || data.expire == 0) {
+        if (data.expire > new Date().getTime() || data.expire === 0) {
             return false;
         }
 
@@ -220,7 +220,7 @@ export class EMemory {
             const filename = fileSec[0];
             const suffix = fileSec[1];
 
-            if (suffix == "dat") continue;
+            if (suffix === "dat") continue;
 
             let info = {
                 expire: 0,
@@ -234,7 +234,7 @@ export class EMemory {
                 decoder.decode(Deno.readFileSync(this.memoryPath + filename + ".idx")),
             );
 
-            if (info.symbol.split(".")[0] == group) {
+            if (info.symbol.split(".")[0] === group) {
                 try {
                     Deno.removeSync(this.memoryPath + filename + ".dat");
                     Deno.removeSync(this.memoryPath + filename + ".idx");
@@ -273,7 +273,7 @@ export class EMemory {
             const filename = fileSec[0];
             const suffix = fileSec[1];
 
-            if (suffix == "idx") continue;
+            if (suffix === "idx") continue;
 
             // Memory 数据读取（从持久化读取至内存）
 
@@ -294,17 +294,17 @@ export class EMemory {
                 data.idx = JSON.parse(
                     decoder.decode(Deno.readFileSync(path + filename + ".idx")),
                 );
-            } catch (err) {
+            } catch (_) {
                 continue;
             }
 
             // 过期数据则不读取
-            if (data.idx.expire <= new Date().getTime() && data.idx.expire != 0) {
+            if (data.idx.expire <= new Date().getTime() && data.idx.expire !== 0) {
                 continue;
             }
 
             // MD5 Checker 错误
-            if (data.idx.checker != createHash("md5").update(data.dat).toString()) {
+            if (data.idx.checker !== createHash("md5").update(data.dat).toString()) {
                 continue;
             }
 
@@ -331,7 +331,7 @@ export class EMemory {
         }
 
         for (const [name, group] of memorys.entries()) {
-            if (group.status == 2) continue; // status 为 2 则不进行持久化
+            if (group.status === 2) continue; // status 为 2 则不进行持久化
 
             // 遍历群组中的每一条数据
             for (const [symbol, memory] of group.memorys) {

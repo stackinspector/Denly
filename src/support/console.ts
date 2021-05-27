@@ -18,23 +18,23 @@ export class EConsole {
         console.log(message);
     }
 
-    public static info(message: string, source: string = "Denly"): void {
-        let temp: string = `[INFO] @${source}:> ${message}`;
+    public static info(message: string, source = "Denly"): void {
+        const temp = `[INFO] @${source}:> ${message}`;
         console.log(temp);
     }
 
-    public static warn(message: string, source: string = "Denly"): void {
-        let temp: string = `[WARN] @${source}:> ${message}`;
+    public static warn(message: string, source = "Denly"): void {
+        const temp = `[WARN] @${source}:> ${message}`;
         console.warn(colorTab.Yellow + temp + colorTab.Clean);
     }
 
-    public static error(message: string, source: string = "Denly"): void {
-        let temp: string = `[ERROR] @${source}:> ${message}`;
+    public static error(message: string, source = "Denly"): void {
+        const temp = `[ERROR] @${source}:> ${message}`;
         console.error(colorTab.Red + temp + colorTab.Clean);
     }
 
-    public static debug(message: string, source: string = "Denly"): void {
-        let temp: string = `[DEBUG] @${source}:> ${message}`;
+    public static debug(message: string, source = "Denly"): void {
+        const temp = `[DEBUG] @${source}:> ${message}`;
         console.error(colorTab.Green + temp + colorTab.Clean);
     }
 }

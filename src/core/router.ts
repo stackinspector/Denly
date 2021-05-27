@@ -12,7 +12,7 @@ interface ruleOption {
     method: string;
 }
 
-type Controller = (...parms: string[]) => any;
+type Controller = (...parms: string[]) => unknown;
 type ErrorContrl = () => { header: Headers; body: string | Uint8Array };
 
 // 路由信息
@@ -47,7 +47,7 @@ class RouteManager {
     ): RouteManager {
         _routers.set(path, controller);
 
-        if (options == undefined) {
+        if (options === void 0) {
             options = { method: "ANY" };
         }
 
@@ -98,10 +98,10 @@ class RouteManager {
        * @returns {RouteManager} RouteManager
        */
     public fallback(
-        code: number | Array<number>,
+        code: number | number[],
         controller: ErrorContrl,
     ): RouteManager {
-        if (typeof code == "object") {
+        if (typeof code === "object") {
             code.forEach((element) => {
                 _errors.set(element, controller);
             });
@@ -146,23 +146,23 @@ export class RouteController {
        * esc      为当前遍历到的路由路径
        */
 
-    public static processer(sections: Array<string>, method: string) {
+    public static processer(sections: string[], method: string) {
         let result = "";
-        const parms: Array<string> = [];
+        const parms: string[] = [];
 
         _routers.forEach((_, key) => {
-            if (result != "") return null; // 已经找到匹配结果则跳过查找
+            if (result !== "") return null; // 已经找到匹配结果则跳过查找
 
             // 访问类型判定（类型不同直接跳过）
             const needMethod = _optinfo?.get(key)?.method || "ANY";
 
-            if (needMethod != method && needMethod != "ANY") {
+            if (needMethod !== method && needMethod !== "ANY") {
                 return null;
             }
 
             let flag = false;
 
-            const esc: Array<string> = pathParser(key);
+            const esc: string[] = pathParser(key);
 
             if (sections.length < esc.length) {
                 return null;
@@ -172,7 +172,7 @@ export class RouteController {
                 if (flag) return;
 
                 // 判断是否为 Regex
-                if (node.substr(0, 1) == ":") {
+                if (node.substr(0, 1) === ":") {
                     const sign = node.slice(1);
                     if (_reginfo.has(sign)) {
                         const regex = _reginfo.get(sign);
@@ -186,7 +186,7 @@ export class RouteController {
                         regex.lastIndex = 0;
                     }
                 } else {
-                    if (sections[index] != node) {
+                    if (sections[index] !== node) {
                         flag = true; // 匹配错误，终止匹配
                     }
                 }
@@ -195,7 +195,7 @@ export class RouteController {
             if (!flag) result = key;
         });
 
-        if (result != "") {
+        if (result !== "") {
             return {
                 route: _routers.get(result),
                 other: _optinfo.get(result),
@@ -207,12 +207,12 @@ export class RouteController {
             let isres = "";
 
             _resource.forEach((path, url) => {
-                const esc: Array<string> = pathParser(url);
+                const esc: string[] = pathParser(url);
                 let temp: string = path + _separator;
                 let flag = true;
 
                 for (const index in sections) {
-                    if (sections[index] == esc[index]) {
+                    if (sections[index] === esc[index]) {
                         continue;
                     }
 
@@ -232,13 +232,13 @@ export class RouteController {
             });
 
             // Static resource request
-            if (isres != "") {
+            if (isres !== "") {
                 return {
                     route: (path: string) => {
                         try {
                             if (fileExist(path)) {
 
-                                const tab: { [key: string]: string } = {
+                                const tab: Record<string, string> = {
                                     ico: "image/jpg; charset=utf-8",
                                     jpg: "image/jpg; charset=utf-8",
                                     png: "image/jpg; charset=utf-8",
@@ -262,7 +262,7 @@ export class RouteController {
                                 }
                                 const decoder = new TextDecoder();
 
-                                if (tab[suffix] != "image/jpg; charset=utf-8") {
+                                if (tab[suffix] !== "image/jpg; charset=utf-8") {
                                     return decoder.decode(Deno.readFileSync(path));
                                 } else {
                                     return Deno.readFileSync(path);
@@ -301,7 +301,7 @@ export class RouteController {
             header = result.header;
             const data = result.body;
 
-            if (typeof data == "string") {
+            if (typeof data === "string") {
                 context = encoder.encode(data);
             } else {
                 context = data;

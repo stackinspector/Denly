@@ -8,11 +8,11 @@ import { Memory } from "../../library/memory.ts";
 import { fileExist } from "../../library/fileSystem.ts";
 
 export function getDecoder(url: string) {
-    const result: { [name: string]: string; } = {};
+    const result: Record<string, string> = {};
 
     if (url.includes("?")) {
         const parm: string = url.split("?")[1];
-        const parms: Array<string> = parm.split("&");
+        const parms: string[] = parm.split("&");
 
         parms.forEach((data) => {
             const kv = data.split("=");
@@ -32,17 +32,17 @@ export function getDecoder(url: string) {
 export function postDecoder(
     buffer: Uint8Array,
     header: Headers,
-): { body: { [name: string]: string; }; files: { [name: string]: File; }; } {
+): { body: Record<string, string>; files: Record<string, File>; } {
 
     const encoder = new TextEncoder();
     const decoder = new TextDecoder("utf-8");
 
 
     const rawBody = decoder.decode(buffer);
-    let body: { [name: string]: any; } = {};
+    let body: Record<string, unknown> = {};
 
 
-    const files: { [name: string]: File; } = (rawBody.match(/---(\n|\r|.)*?Content-Type.*(\n|\r)+(\n|\r|.)*?(?=((\n|\r)--|$))/g) || []).reduce((files: { [name: string]: File; }, fileString: string, i) => {
+    const files: Record<string, File> = (rawBody.match(/---(\n|\r|.)*?Content-Type.*(\n|\r)+(\n|\r|.)*?(?=((\n|\r)--|$))/g) || []).reduce((files: Record<string, File>, fileString: string) => {
 
         const fileName = /filename="(.*?)"/.exec(fileString)?.[1];
         const fileType = /Content-Type: (.*)/.exec(fileString)?.[1]?.trim();
@@ -109,10 +109,10 @@ export function postDecoder(
 
     try {
         body = JSON.parse(rawBody);
-    } catch (error) {
+    } catch (_) {
         if (rawBody.includes(`name="`)) {
             body = (rawBody.match(/name="(.*?)"(\s|\n|\r)*(.*)(\s|\n|\r)*---/gm) || [])
-                .reduce((fields: {}, field: string): { [name: string]: string; } => {
+                .reduce((fields: {}, field: string): Record<string, string> => {
                     if (!/name="(.*?)"/.exec(field)?.[1]) return fields;
 
                     return {

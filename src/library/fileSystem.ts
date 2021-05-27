@@ -20,7 +20,7 @@ export function dirCheck(path: string) {
     if (!dirExist(path)) {
         try {
             Deno.mkdirSync(path, { recursive: true });
-        } catch (errror) {
+        } catch (_) {
             return false;
         }
     }
@@ -35,7 +35,7 @@ export function dirCheck(path: string) {
 export function fileExist(path: string) {
     try {
         Deno.readFileSync(path);
-    } catch (error) {
+    } catch (_) {
         return false;
     }
     return true;
