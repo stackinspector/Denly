@@ -3,9 +3,9 @@
  * @author mrxiaozhuox <mrxzx@qq.com>
  */
 
-import { EConsole } from "../../support/console.ts";
-import { Memory } from "../../library/memory.ts";
-import { fileExist } from "../../library/fileSystem.ts";
+// import { EConsole } from "../../support/console.ts";
+// import { Memory } from "../../library/memory.ts";
+// import { fileExist } from "../../library/fileSystem.ts";
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -26,23 +26,15 @@ export function getDecoder(url: string) {
     return result;
 }
 
-/**
- * postDecoder post提交数据处理器
- * @param body
- * @param header
- * @returns { body: { [name: string]: string; }; files: { [name: string]: File; }; }
- */
+/** post提交数据处理器 */
 export function postDecoder(
     buffer: Uint8Array,
     header: Headers,
 ): { body: Record<string, string>; files: Record<string, File>; } {
-
     const rawBody = textDecoder.decode(buffer);
     let body: Record<string, unknown> = {};
 
-
     const files: Record<string, File> = (rawBody.match(/---(\n|\r|.)*?Content-Type.*(\n|\r)+(\n|\r|.)*?(?=((\n|\r)--|$))/g) || []).reduce((files: Record<string, File>, fileString: string) => {
-
         const fileName = /filename="(.*?)"/.exec(fileString)?.[1];
         const fileType = /Content-Type: (.*)/.exec(fileString)?.[1]?.trim();
         const name = /name="(.*?)"/.exec(fileString)?.[1];
@@ -59,7 +51,6 @@ export function postDecoder(
         let start = -1;
         let end = buffer.length;
         for (let i = 0; i < buffer.length; i++) {
-
             if (start === -1) {
 
                 let matchedUniqueString = true;
@@ -94,7 +85,6 @@ export function postDecoder(
                 end = i;
                 break;
             }
-
         }
 
         if (start === -1) return files;

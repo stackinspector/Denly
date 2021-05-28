@@ -8,8 +8,8 @@
  * A simple develop framework - Denly
  *
  * Simple Demo:
- * let app = new Denly({hostname: "0.0.0.0", port: 808});
- * app.route.get("/",() => { return "Hello World" });
+ * let app = new Denly({ hostname: "0.0.0.0", port: 808 });
+ * app.route.get("/", { return "Hello World" });
  * app.run();
  *
  * Import Source:
@@ -19,8 +19,6 @@
  *
  * Denly Document:
  * deno.land: https://doc.deno.land/https/deno.land/x/denly@V0.2/core/denly.ts
- *
- *
  *
  * Main.Mods
  * Import All Useful Package:

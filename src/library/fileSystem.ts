@@ -1,7 +1,4 @@
-/**
- * Function: dirExist
- * determine whether the directory exists
- */
+/** determine whether the directory exists */
 export function dirExist(path: string) {
     try {
         Deno.readDirSync(path);
@@ -12,10 +9,7 @@ export function dirExist(path: string) {
     return true;
 }
 
-/**
- * Function: dirCheck
- * if directory not found, then create a new
- */
+/** if directory not found, then create a new */
 export function dirCheck(path: string) {
     if (!dirExist(path)) {
         try {
@@ -28,10 +22,7 @@ export function dirCheck(path: string) {
     return true;
 }
 
-/**
- * Function: dirExist
- * determine whether the file exists
- */
+/** determine whether the file exists */
 export function fileExist(path: string) {
     try {
         Deno.readFileSync(path);

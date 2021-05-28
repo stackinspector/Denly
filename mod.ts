@@ -6,7 +6,6 @@
 
 import { Denly, Memory, _tempdir } from "./src/mod.ts";
 
-
 const app = new Denly({
     hostname: "127.0.0.1",
     port: 808,
@@ -14,7 +13,6 @@ const app = new Denly({
         debug: true,
     },
 });
-
 
 app.route.get("/", () => {
     return "Hello World";

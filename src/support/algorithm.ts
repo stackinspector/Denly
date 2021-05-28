@@ -1,8 +1,4 @@
-/**
- * @description Quicksort Demo
- * @param {Array<number>} arr
- * @returns {Array<number>} result
- */
+/** Quicksort Demo */
 export function sort(arr: number[]): number[] {
     // length < 1 don't need sort
     if (arr.length < 1) return arr;

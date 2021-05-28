@@ -1,3 +1,9 @@
+/**
+ * core.storage
+ * @author mrxiaozhuox <mrxzx@qq.com>
+ * 本 Session 系统使用 Denly Memory 程序实现
+ */
+
 import {
     Cookie as ICookie,
     getCookies,
@@ -13,12 +19,6 @@ import { Memory } from "../library/memory.ts";
 
 const textDecoder = new TextDecoder();
 
-/**
- * core.storage
- * @author mrxiaozhuox <mrxzx@qq.com>
- * 本 Session 系统使用 Denly Memory 程序实现
- */
-
 interface SessionSystem {
     survivalTime: number;
     set(key: string, value: string | Uint8Array): void;
@@ -31,17 +31,13 @@ interface SessionSystem {
 class ESession implements SessionSystem {
     public survivalTime = 120 * 60;
 
-    /**
-       * 设置 Session 信息
-       */
+    /** 设置 Session 信息 */
     public set(key: string, value: string | Uint8Array) {
         Memory.group("Session");
         Memory.set(key, value, this.survivalTime);
     }
 
-    /**
-       * 读取 Session 信息
-       */
+    /** 读取 Session 信息 */
     public get(key: string) {
         // 当数据被访问，则延长过期时间
         Memory.group("Session");
@@ -54,17 +50,13 @@ class ESession implements SessionSystem {
         }
     }
 
-    /**
-       * 删除 Session 信息
-       */
+    /** 删除 Session 信息 */
     public delete(key: string) {
         Memory.group("Session");
         return Memory.delete(key);
     }
 
-    /**
-       * 判断 Session 信息是否存在
-       */
+    /** 判断 Session 信息是否存在 */
     public has(key: string) {
         if (this.get(key)) {
             return true;
@@ -73,9 +65,7 @@ class ESession implements SessionSystem {
         }
     }
 
-    /**
-       * 清空所有 Session 信息
-       */
+    /** 清空所有 Session 信息  */
     public clean() {
         Memory.group("Session");
         return Memory.clean("Session");
@@ -101,16 +91,12 @@ class ECookie {
         storage.push(data);
     }
 
-    /**
-       * 读取数据
-       */
+    /** 读取数据 */
     public get(key: string) {
         return loader.get(key);
     }
 
-    /**
-       * 数据是否存在
-       */
+    /** 数据是否存在 */
     public has(key: string) {
         if (this.get(key)) {
             return true;
@@ -119,9 +105,7 @@ class ECookie {
         return false;
     }
 
-    /**
-       * 删除 Cookie
-       */
+    /** 删除 Cookie */
     public delete(key: string) {
         this.set(key, "", {
             expires: new Date(0),

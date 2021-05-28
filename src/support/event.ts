@@ -21,30 +21,17 @@ export interface EventList {
 }
 
 export class DEvent {
-
-    /**
-     * Events storage map
-     * @var
-     */
+    /** Events storage map */
     private events: Map<string, {
         callback: Callback;
         options: DeOptions;
         frequency: number;
     }> = new Map();
 
-    /**
-     * Timing event storage map
-     * @var
-     */
+    /** Timing event storage map */
     private timingTask: Map<string, number> = new Map();
 
-    /**
-     * Reigster a base event
-     * @param name 
-     * @param callback 
-     * @param options 
-     * @returns DEvent
-     */
+    /** Reigster a base event */
     public registerEvent(
         name: string,
         callback: Callback,
@@ -69,13 +56,8 @@ export class DEvent {
         return this;
     }
 
-    /**
-     * Trigger a event
-     * @param name 
-     * @returns returned value
-     */
+    /** Trigger a event */
     public triggerEvent(name: string): unknown {
-
         const eve = this.events.get(name);
 
         if (eve) {
@@ -97,13 +79,7 @@ export class DEvent {
         return null;
     }
 
-    /**
-     * Register a timing event
-     * @param name 
-     * @param callback 
-     * @param interval 
-     * @returns DEvent
-     */
+    /** Register a timing event */
     public timingEvent(
         name: string,
         callback: Callback,
@@ -115,7 +91,6 @@ export class DEvent {
 
     /**
      * Timing Task listener
-     * @returns DEvent
      * @Internal
      */
     public timingTaskListner(): DEvent {
@@ -147,14 +122,14 @@ export class DEvent {
 
     /**
      * Get all events in the program
-     * @description Carrying "@" are internal events, dont delete it! 
-     * @returns { normal: Object, timing: Object }
+     * Carrying "@" are internal events, dont delete it! 
      */
-    public eventList() {
-
+    public eventList(): { normal: Record<string, unknown>, timing: Record<string, unknown> } {
         const result: EventList = {
-            normal: { /** normal event */ },
-            timing: { /** timing event */ },
+            /** normal event */
+            normal: { },
+            /** timing event */
+            timing: { },
         };
 
         this.events.forEach((value, key) => {

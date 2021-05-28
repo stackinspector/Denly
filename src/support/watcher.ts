@@ -2,44 +2,26 @@ import { _dirname, Denly, EConsole } from "../mod.ts";
 
 type callback = (status: string) => unknown;
 
-/**
- * Watcher [obj]
- * Debug File Watcher
- */
+/** Debug File Watcher */
 export class Watcher {
-    /**
-       * Watcher.info [var]
-       * watcher config information
-       */
+    /** watcher config information */
     public static info: {
         path: string;
         suffix: string[];
     } = { path: _dirname + "/", suffix: ["ts"] };
 
-    /**
-       * Watcher.app
-       * the denly application object
-       */
+    /** the denly application object */
     public static app: Denly;
 
-    /**
-       * Watcher.callback [var:func]
-       * watcher triggered callback
-       */
+    /** watcher triggered callback */
     private static callback: callback = (status: string) => {
         Watcher.defaultCallback(status);
     };
 
-    /**
-       * Watcher.lastReload [var]
-       * the timestamp for the last reload
-       */
+    /** the timestamp for the last reload */
     private static lastReload: number = new Date().getTime();
 
-    /**
-       * Watcher.defaultCallback [func]
-       * default Controller
-       */
+    /** default Controller */
     public static defaultCallback(status: string) {
         if (this.app.deop.options?.debug) {
             if (Deno.args.length > 0 && Deno.args[0] === "-CHILD") {
@@ -49,18 +31,12 @@ export class Watcher {
         }
     }
 
-    /**
-       * Watcher.bind [func]
-       * bind a new callback to watcher
-       */
+    /** bind a new callback to watcher */
     public static bind(callback: callback) {
         Watcher.callback = callback;
     }
 
-    /**
-       * Watcher.listen [func]
-       * start to listen the file modify
-       */
+    /** start to listen the file modify */
     public static async listen() {
         const watcher = Deno.watchFs(Watcher.info.path, { recursive: true });
         for await (const event of watcher) {

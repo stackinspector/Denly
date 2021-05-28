@@ -1,12 +1,12 @@
 export const colorTab = {
-    Black: "\x1b[30m", // 黑
-    Red: "\x1b[31m", // 红
-    Green: "\x1b[32m", // 绿
-    Yellow: "\x1b[33m", // 黄
-    Blue: "\x1b[34m", // 蓝
-    Purple: "\x1b[35m", // 紫
-    White: "\x1b[37m", // 白
-    Clean: "\x1b[0m", // 清空
+    Black: "\x1b[30m",
+    Red: "\x1b[31m",
+    Green: "\x1b[32m",
+    Yellow: "\x1b[33m",
+    Blue: "\x1b[34m",
+    Purple: "\x1b[35m",
+    White: "\x1b[37m",
+    Clean: "\x1b[0m",
 };
 
 export class EConsole {

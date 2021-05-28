@@ -1,11 +1,11 @@
-// Copyright 2020-2021 the mrxiaozhuox. All rights reserved. MIT license
-
 /**
  * Denly Framework
  * @author mrxiaozhuox<mrxzx@qq.com>
  * @abstract Denly Framework
  * @license MIT License
  * @link https://denly.mrxzx.info/
+ * 
+ * Copyright 2020-2021 the mrxiaozhuox. All rights reserved. MIT license
  */
 
 // Deno std library [Server]
@@ -43,10 +43,7 @@ import { Memory } from "../library/memory.ts";
 import { _dirname, _version, Watcher } from "../mod.ts";
 
 
-/**
- * Denly app structure options.
- * @interface
- */
+/** Denly app structure options. */
 export interface DeOption {
     hostname: string;
     port: number;
@@ -55,10 +52,7 @@ export interface DeOption {
     };
 }
 
-/**
- * Denly config options
- * @interface
- */
+/** Denly config options */
 interface DeConfig {
     storage: {
         log: string;
@@ -74,10 +68,7 @@ interface DeConfig {
  * @public
  */
 export class Denly {
-
-    /**
-     * @description DConfig
-     */
+    /** DeConfig */
     public config: DeConfig = {
         storage: {
             log: _dirname + "/runtime/log",
@@ -88,34 +79,22 @@ export class Denly {
         },
     };
 
-    /**
-       * @description router shortcut
-       */
+    /** router shortcut */
     public route = Router;
 
-    /**
-       * @description http-server object
-       */
+    /** http-server object */
     private http: DenlyHttp;
 
-    /**
-       * @description Denly server options (use to reload)
-       */
+    /** Denly server options (use to reload) */
     public deop: DeOption;
 
-    /**
-       * @description request object
-       */
+    /**  request object */
     public request: DRequest = Request;
 
-    /**
-       * @description response object
-       */
+    /** response object */
     public response: DResponse = Response;
 
-    /**
-       * @description The old object after the restart
-       */
+    /** The old object after the restart */
     private deprecated: DenlyHttp | null = null;
 
     constructor(options?: DeOption, http?: DenlyHttp) {
@@ -145,14 +124,12 @@ export class Denly {
         Memory.loader();
     }
 
-    /**
-       * Denly.proxy [func]
-       * proxy the request (private method)
-       */
+    /** proxy the request (private method) */
     public async proxy(request: ServerRequest): Promise<HttpState> {
         let status = 200;
 
-        const sections: string[] = pathParser(request.url); // 路径解析
+        // 路径解析
+        const sections: string[] = pathParser(request.url);
 
         let args: Record<string, string> = {};
         let form: Record<string, string> = {};
@@ -160,7 +137,8 @@ export class Denly {
 
         let context: Uint8Array | Deno.Reader | string = "";
 
-        loadCookie(request); // 读取存在的 Cookie
+        // 读取存在的 Cookie
+        loadCookie(request);
 
         // 除去 GET 请求才支持 FormData, Urlencoded, Raw, File 等提交
         if (request.method === "GET") {
@@ -181,7 +159,6 @@ export class Denly {
 
         if (target) {
             if (typeof target.route === "function") {
-
                 // Default Header [Content-Type]
                 if (target.other?.method === "ANY" || target.other?.method === "GET") {
                     this.response.header("Content-Type", "text/html;charset=utf-8");
@@ -234,10 +211,9 @@ export class Denly {
     }
 
     /**
-       * Denly.run [func]
-       * start the application
-       * loop to listening request
-       */
+     * start the application
+     * loop to listening request
+     */
     public async run() {
         const http: DenlyHttp = this.http;
 
@@ -259,15 +235,13 @@ export class Denly {
 
         for await (const request of http.serve) {
             this.proxy(request).then(({ code }) => {
-                Denly.reqinfo(request, code); // 请求数据渲染
+                // 请求数据渲染
+                Denly.reqinfo(request, code);
             });
         }
     }
 
-    /**
-       * Denly.reload [func]
-       * restart the denly server
-       */
+    /** restart the denly server */
     public reload() {
         this.http.serve.close();
 
@@ -284,10 +258,7 @@ export class Denly {
         }, 800);
     }
 
-    /**
-       * Denly.reqinfo [func]
-       * display the request info
-       */
+    /** display the request info */
     private static reqinfo(r: ServerRequest, code: number): void {
         let status = "";
         if (code === 200) {
@@ -301,10 +272,7 @@ export class Denly {
     }
 }
 
-/**
- * Function: pathParser
- * parse the url
- */
+/** parse the url */
 export function pathParser(url: string) {
     if (url.includes("?")) {
         url = url.split("?")[0];

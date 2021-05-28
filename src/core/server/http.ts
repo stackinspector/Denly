@@ -23,9 +23,6 @@ export class DenlyHttp {
     public debug = false;
     public serve: Server;
 
-    /**
-       *
-       */
     constructor(
         host: string,
         port: number,
@@ -72,9 +69,9 @@ const reqinfo: ReqInfos = {
 
 export class DRequest {
     /**
-       * Get 参数获取
-       * PS: $_GET
-       */
+     * Get 参数获取
+     * PS: $_GET
+     */
     public args(key: string) {
         if (key in reqinfo._args) {
             return reqinfo._args[key];
@@ -83,9 +80,9 @@ export class DRequest {
     }
 
     /**
-       * Post 参数获取
-       * PS: $_POST
-       */
+     * Post 参数获取
+     * PS: $_POST
+     */
     public form(key: string) {
         if (key in reqinfo._form) {
             return reqinfo._form[key];
@@ -93,11 +90,7 @@ export class DRequest {
         return null;
     }
 
-    /**
-     * upload file
-     * @param key 
-     * @return file struct
-     */
+    /** upload file */
     public file(key: string) {
         if (key in reqinfo._file) {
             return reqinfo._file[key];
@@ -110,7 +103,6 @@ export class DRequest {
 export const Request = new DRequest();
 
 export class DResponse {
-
     private contentType: Record<string, string> = {
         ico: "image/jpg; charset=utf-8",
         jpg: "image/jpg; charset=utf-8",
@@ -126,9 +118,7 @@ export class DResponse {
         html: "text/html; charset=utf-8",
     };
 
-    /**
-       * 重定向设置
-       */
+    /** 重定向设置 */
     public redirect(url: string, cond = true) {
         if (cond) {
             reqinfo.redirect = url;
@@ -137,9 +127,7 @@ export class DResponse {
         }
     }
 
-    /**
-       * 设置 Header
-       */
+    /** 设置 Header */
     public header(key: string, value: string, append?: boolean) {
         if (append) {
             header.append(key, value);
@@ -148,17 +136,13 @@ export class DResponse {
         }
     }
 
-    /**
-       * 返回 Json 代码
-       */
+    /** 返回 Json 代码 */
     public json(data: Record<string, unknown>) {
         header.set("Content-Type", "application/json; charset=utf-8");
         return JSON.stringify(data);
     }
 
-    /**
-       * 返回 文件内容
-       */
+    /** 返回 文件内容 */
     public file(file: string, contentType?: string) {
         if (typeof file === "string") {
             if (fileExist(file)) {

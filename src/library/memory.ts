@@ -2,6 +2,7 @@
  * support.memory
  * @author mrxiaozhuox <mrxzx@qq.com>
  */
+
 import { _dirname } from "../mod.ts";
 
 import { createHash } from "https://deno.land/std@0.92.0/hash/mod.ts";
@@ -39,8 +40,6 @@ interface listenerOption {
 }
 
 /**
- * Memory [obj]
- *
  * EMemory 主要为 Denly 提供缓存服务！
  * Session、FileTemp 等都将基于本程序开发！
  */
@@ -61,9 +60,9 @@ export class EMemory {
     }
 
     /**
-       * 切换当前 Group
-       * 第二位参数可以关闭 Group 的持久化功能
-       */
+     * 切换当前 Group
+     * 第二位参数可以关闭 Group 的持久化功能
+     */
     public group(key: string, persistence = true): void {
         this.thisGroup = key;
 
@@ -84,9 +83,7 @@ export class EMemory {
         }
     }
 
-    /**
-       * 添加（设置） Memory
-       */
+    /** 添加（设置） Memory */
     public set(key: string, value: string | Uint8Array, expire?: number) {
         let memTemp = this.memorys.get(this.thisGroup);
 
@@ -120,9 +117,7 @@ export class EMemory {
         this.memorys.set(this.thisGroup, memTemp);
     }
 
-    /**
-       * 读取 Memory 数据
-       */
+    /** 读取 Memory 数据 */
     public get(key: string) {
         const memTemp = this.memorys.get(this.thisGroup);
 
@@ -133,9 +128,7 @@ export class EMemory {
         return memTemp.memorys.get(key)?.value;
     }
 
-    /**
-       * 删除 Memory 数据
-       */
+    /** 删除 Memory 数据 */
     public delete(key: string) {
         const hash = createHash("md5");
         hash.update(this.thisGroup + "@" + key);
@@ -157,9 +150,7 @@ export class EMemory {
         return memTemp.memorys.delete(key);
     }
 
-    /**
-       * 检查 Memory 是否过期
-       */
+    /** 检查 Memory 是否过期 */
     public overdue(key: string) {
         const memTemp = this.memorys.get(this.thisGroup);
 
@@ -178,9 +169,7 @@ export class EMemory {
         return true;
     }
 
-    /**
-       * 延长过期时间
-       */
+    /** 延长过期时间 */
     public extend(key: string, expire: number) {
         const memTemp = this.memorys.get(this.thisGroup);
 
@@ -195,9 +184,7 @@ export class EMemory {
         return false;
     }
 
-    /**
-       * 清空当前所有 Memory 数据
-       */
+    /** 清空当前所有 Memory 数据 */
     public clean(group?: string) {
         if (!group) {
             this.memorys = new Map();
@@ -229,8 +216,6 @@ export class EMemory {
                 symbol: "",
             };
 
-            
-
             info = JSON.parse(
                 textDecoder.decode(Deno.readFileSync(this.memoryPath + filename + ".idx")),
             );
@@ -255,9 +240,9 @@ export class EMemory {
     }
 
     /**
-       * Denly Memory 触发器（监听器）
-       * 用于对数据进行持久化和更新监听
-       */
+     * Denly Memory 触发器（监听器）
+     * 用于对数据进行持久化和更新监听
+     */
     public listener(options: listenerOption) {
         Event.timingEvent("@MemoryListener", () => {
             this.persistenceAll(options.http);
@@ -319,9 +304,9 @@ export class EMemory {
     }
 
     /**
-       * 将目前已存在的数据全部持久化
-       * PS: 拒绝持久化的数据会被过滤
-       */
+     * 将目前已存在的数据全部持久化
+     * PS: 拒绝持久化的数据会被过滤
+     */
     public persistenceAll(http?: DenlyHttp) {
         const memorys = this.memorys;
 
@@ -330,7 +315,8 @@ export class EMemory {
         }
 
         for (const [name, group] of memorys.entries()) {
-            if (group.status === 2) continue; // status 为 2 则不进行持久化
+            // status 为 2 则不进行持久化
+            if (group.status === 2) continue;
 
             // 遍历群组中的每一条数据
             for (const [symbol, memory] of group.memorys) {
@@ -387,9 +373,5 @@ export class EMemory {
     }
 }
 
-/**
- * The singleton pattern
- * @public
- * @var
- */
+/** The singleton pattern */
 export const Memory = new EMemory();

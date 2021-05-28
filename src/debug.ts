@@ -11,7 +11,6 @@
  *
  * Support Version: Denly V0.23
  * Update Date: 2021/05/11
- *
  */
 
 import { EConsole } from "./mod.ts";

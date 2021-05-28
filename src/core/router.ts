@@ -1,3 +1,8 @@
+/**
+ * core.router
+ * @author mrxiaozhuox <mrxzx@qq.com>
+ */
+
 import { pathParser } from "./denly.ts";
 import { dirExist, fileExist } from "../library/fileSystem.ts";
 import { _separator } from "../library/constant.ts";
@@ -5,11 +10,6 @@ import { Response } from "./server/http.ts";
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
-
-/**
- * core.router
- * @author mrxiaozhuox <mrxzx@qq.com>
- */
 
 interface ruleOption {
     method: string;
@@ -31,18 +31,8 @@ const _reginfo: Map<string, RegExp> = new Map();
 // Resource Information
 const _resource: Map<string, string> = new Map();
 
-/**
- * RouteManager [obj]
- * Route Manager
- */
+/** Route Manager */
 class RouteManager {
-    /**
-       * @name rule
-       * @param {string} path
-       * @param {Controller} controller
-       * @param {ruleOption} options
-       * @returns {RouteManager} RouteManager
-       */
     public rule(
         path: string,
         controller: Controller,
@@ -59,47 +49,23 @@ class RouteManager {
         return this;
     }
 
-    /**
-       * @name regex
-       * @param {string} sign
-       * @param {RegExp} regex
-       * @returns {RouteManager} RouteManager
-       */
     public regex(sign: string, regex: RegExp): RouteManager {
         _reginfo.set(sign, regex);
         return this;
     }
 
-    /**
-       * @name get
-       * @param {string} path
-       * @param {Controller} controller
-       * @returns {RouteManager} RouteManager
-       */
     public get(path: string, controller: Controller): RouteManager {
         return this.rule(path, controller, {
             method: "GET",
         });
     }
 
-    /**
-       * @name post
-       * @param {string} path
-       * @param {Controller} controller
-       * @returns {RouteManager} RouteManager
-       */
     public post(path: string, controller: Controller): RouteManager {
         return this.rule(path, controller, {
             method: "POST",
         });
     }
 
-    /**
-       * @name fallback
-       * @param {number | Array<number>} code
-       * @param {ErrorContrl} controller
-       * @returns {RouteManager} RouteManager
-       */
     public fallback(
         code: number | number[],
         controller: ErrorContrl,
@@ -115,13 +81,6 @@ class RouteManager {
         return this;
     }
 
-    /**
-       * @name resource
-       * @param {string} url
-       * @param {string} path
-       *
-       * @returns {RouteManager} RouteManager
-       */
     public resource(url: string, path: string): RouteManager {
         _resource.set(url, path);
 
@@ -140,21 +99,19 @@ export const Router: RouteManager = new RouteManager()
     )
     .regex("date", /^\d{4}-\d{1,2}-\d{1,2}/g);
 
-/**
- * 内部对象，请勿随意调用
- */
+/** 内部对象，请勿随意调用 */
 export class RouteController {
     /**
-       * sections 为调用路径
-       * esc      为当前遍历到的路由路径
-       */
-
+     * @param sections 调用路径
+     * @param esc 当前遍历到的路由路径
+     */
     public static processer(sections: string[], method: string) {
         let result = "";
         const parms: string[] = [];
 
         _routers.forEach((_, key) => {
-            if (result !== "") return null; // 已经找到匹配结果则跳过查找
+            // 已经找到匹配结果则跳过查找
+            if (result !== "") return null;
 
             // 访问类型判定（类型不同直接跳过）
             const needMethod = _optinfo?.get(key)?.method || "ANY";
@@ -182,7 +139,8 @@ export class RouteController {
                         if (!regex) return null;
 
                         if (!regex.test(sections[index])) {
-                            flag = true; // 匹配错误，终止匹配
+                            // 匹配错误，终止匹配
+                            flag = true;
                         } else {
                             parms.push(sections[index]);
                         }
@@ -190,7 +148,8 @@ export class RouteController {
                     }
                 } else {
                     if (sections[index] !== node) {
-                        flag = true; // 匹配错误，终止匹配
+                        // 匹配错误，终止匹配
+                        flag = true;
                     }
                 }
             });
@@ -205,7 +164,6 @@ export class RouteController {
                 parms: parms,
             };
         } else {
-
             // check the resource list
             let isres = "";
 
@@ -286,14 +244,10 @@ export class RouteController {
         }
     }
 
-    /**
-       * 返回 httpError 结果
-       */
+    /** 返回 httpError 结果 */
     public static httpError(
         code: number,
     ): { status: number; body: Uint8Array; headers: Headers } {
-        
-
         let header = new Headers();
         let context: Uint8Array = new Uint8Array([]);
 
@@ -318,9 +272,7 @@ export class RouteController {
         };
     }
 
-    /**
-       * 获取路由数据信息
-       */
+    /** 获取路由数据信息 */
     public static list() {
         return [_routers, _optinfo, _errors, _resource];
     }
