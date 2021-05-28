@@ -167,7 +167,7 @@ export class Denly {
             args = getDecoder(request.url);
         } else {
             const origin: Uint8Array = await readAll(request.body);
-            let temp = postDecoder(origin, request.headers);
+            const temp = postDecoder(origin, request.headers);
 
             form = temp.body;
             file = temp.files;

@@ -7,6 +7,9 @@ import { EConsole } from "../../support/console.ts";
 import { Memory } from "../../library/memory.ts";
 import { fileExist } from "../../library/fileSystem.ts";
 
+const textEncoder = new TextEncoder();
+const textDecoder = new TextDecoder();
+
 export function getDecoder(url: string) {
     const result: Record<string, string> = {};
 
@@ -34,11 +37,7 @@ export function postDecoder(
     header: Headers,
 ): { body: Record<string, string>; files: Record<string, File>; } {
 
-    const encoder = new TextEncoder();
-    const decoder = new TextDecoder("utf-8");
-
-
-    const rawBody = decoder.decode(buffer);
+    const rawBody = textDecoder.decode(buffer);
     let body: Record<string, unknown> = {};
 
 
@@ -54,8 +53,8 @@ export function postDecoder(
 
         if (!uniqueString) return files;
 
-        const uniqueStringEncoded = encoder.encode(uniqueString);
-        const endSequence = encoder.encode("----");
+        const uniqueStringEncoded = textEncoder.encode(uniqueString);
+        const endSequence = textEncoder.encode("----");
 
         let start = -1;
         let end = buffer.length;
@@ -109,7 +108,7 @@ export function postDecoder(
 
     try {
         body = JSON.parse(rawBody);
-    } catch (_) {
+    } catch {
         if (rawBody.includes(`name="`)) {
             body = (rawBody.match(/name="(.*?)"(\s|\n|\r)*(.*)(\s|\n|\r)*---/gm) || [])
                 .reduce((fields: {}, field: string): Record<string, string> => {

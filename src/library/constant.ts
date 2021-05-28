@@ -42,7 +42,7 @@ export const _tempdir: string = (() => {
         Deno.removeSync(temp, { recursive: true });
 
         return folder;
-    } catch (_) {
+    } catch {
         return _dirname + "/temp/";
     }
 })();

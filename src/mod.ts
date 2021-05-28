@@ -53,4 +53,3 @@ export { DRequest, DResponse, Request, Response } from "./core/server/http.ts";
 
 /** Event Manager */
 export { DEvent, Event } from "./support/event.ts";
-

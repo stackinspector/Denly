@@ -16,7 +16,7 @@ const app = new Denly({
 });
 
 
-app.route.get("/", async () => {
+app.route.get("/", () => {
     return "Hello World";
 });
 

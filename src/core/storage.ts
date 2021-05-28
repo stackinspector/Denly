@@ -11,6 +11,8 @@ import { createHash } from "https://deno.land/std@0.92.0/hash/mod.ts";
 
 import { Memory } from "../library/memory.ts";
 
+const textDecoder = new TextDecoder();
+
 /**
  * core.storage
  * @author mrxiaozhuox <mrxzx@qq.com>
@@ -47,9 +49,8 @@ class ESession implements SessionSystem {
         const data = Memory.get(key);
         if (data) {
             Memory.extend(key, this.survivalTime);
-
-            const decoder = new TextDecoder();
-            return decoder.decode(data);
+            
+            return textDecoder.decode(data);
         }
     }
 

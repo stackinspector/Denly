@@ -3,6 +3,9 @@ import { dirExist, fileExist } from "../library/fileSystem.ts";
 import { _separator } from "../library/constant.ts";
 import { Response } from "./server/http.ts";
 
+const textEncoder = new TextEncoder();
+const textDecoder = new TextDecoder();
+
 /**
  * core.router
  * @author mrxiaozhuox <mrxzx@qq.com>
@@ -260,17 +263,17 @@ export class RouteController {
                                 } else {
                                     Response.header("Content-type", "text/html; charset=utf-8");
                                 }
-                                const decoder = new TextDecoder();
+                                
 
                                 if (tab[suffix] !== "image/jpg; charset=utf-8") {
-                                    return decoder.decode(Deno.readFileSync(path));
+                                    return textDecoder.decode(Deno.readFileSync(path));
                                 } else {
                                     return Deno.readFileSync(path);
                                 }
                             } else {
                                 Response.abort(404);
                             }
-                        } catch (_) {
+                        } catch {
                             return Response.abort(404);
                         }
                     },
@@ -289,7 +292,7 @@ export class RouteController {
     public static httpError(
         code: number,
     ): { status: number; body: Uint8Array; headers: Headers } {
-        const encoder = new TextEncoder();
+        
 
         let header = new Headers();
         let context: Uint8Array = new Uint8Array([]);
@@ -302,7 +305,7 @@ export class RouteController {
             const data = result.body;
 
             if (typeof data === "string") {
-                context = encoder.encode(data);
+                context = textEncoder.encode(data);
             } else {
                 context = data;
             }

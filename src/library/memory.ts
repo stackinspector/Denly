@@ -15,6 +15,9 @@ import { _tempdir } from "./constant.ts";
 
 import { Event } from "../support/event.ts"
 
+const textEncoder = new TextEncoder();
+const textDecoder = new TextDecoder();
+
 interface memoryStruct {
     value: Uint8Array;
     expire?: number;
@@ -34,8 +37,6 @@ interface listenerOption {
     interval: number;
     http: DenlyHttp;
 }
-
-const encoder = new TextEncoder();
 
 /**
  * Memory [obj]
@@ -90,7 +91,7 @@ export class EMemory {
         let memTemp = this.memorys.get(this.thisGroup);
 
         if (typeof value === "string") {
-            value = encoder.encode(value);
+            value = textEncoder.encode(value);
         }
 
         if (expire) {
@@ -144,8 +145,8 @@ export class EMemory {
             try {
                 Deno.remove(this.memoryPath + filename + ".dat");
                 Deno.remove(this.memoryPath + filename + ".idx");
-            } catch (error) {
-                error;
+            } catch {
+
             }
         }
 
@@ -228,18 +229,18 @@ export class EMemory {
                 symbol: "",
             };
 
-            const decoder = new TextDecoder();
+            
 
             info = JSON.parse(
-                decoder.decode(Deno.readFileSync(this.memoryPath + filename + ".idx")),
+                textDecoder.decode(Deno.readFileSync(this.memoryPath + filename + ".idx")),
             );
 
             if (info.symbol.split(".")[0] === group) {
                 try {
                     Deno.removeSync(this.memoryPath + filename + ".dat");
                     Deno.removeSync(this.memoryPath + filename + ".idx");
-                } catch (error) {
-                    error;
+                } catch {
+
                 }
 
                 this.delete(info.symbol.split(".")[1]);
@@ -277,8 +278,6 @@ export class EMemory {
 
             // Memory 数据读取（从持久化读取至内存）
 
-            const decoder = new TextDecoder();
-
             const data = {
                 dat: new Uint8Array(),
                 idx: {
@@ -292,9 +291,9 @@ export class EMemory {
             try {
                 data.dat = Deno.readFileSync(path + filename + ".dat");
                 data.idx = JSON.parse(
-                    decoder.decode(Deno.readFileSync(path + filename + ".idx")),
+                    textDecoder.decode(Deno.readFileSync(path + filename + ".idx")),
                 );
-            } catch (_) {
+            } catch {
                 continue;
             }
 
